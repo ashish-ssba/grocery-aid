@@ -1,0 +1,12 @@
+<html>
+    <head><title th:text="${appName}"></title></head>
+    <body>
+        <form method="POST" action="/csv" enctype="multipart/form-data">
+            <label path="file">Select a CSV file to upload</label>
+            <br />
+            <input type="file" name="file" />
+            <br />
+            <input type="submit" value="Parse" />
+        </form>
+    </body>
+</html>

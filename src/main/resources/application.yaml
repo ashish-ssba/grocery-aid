@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: Grocery Aid
+    thymeleaf:
+        enabled: true
+        prefix: classpath:/templates/
+        suffix: .html

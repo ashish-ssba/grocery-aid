@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.stereotype.Component;
+
 import com.github.prdobby.grocery.aid.models.Amount;
 import com.github.prdobby.grocery.aid.models.Amounts;
 import com.github.prdobby.grocery.aid.models.GroceryList;
 import com.github.prdobby.grocery.aid.models.Ingredient;
 
+@Component
 public class CsvConverter implements Function<String, GroceryList> {
     private static final String SEPARATOR = ",";
 
@@ -21,9 +24,6 @@ public class CsvConverter implements Function<String, GroceryList> {
         
         List<String> recipeNames = getRecipeNames(lines);
         List<Ingredient> ingredients = getIngredients(lines);
-
-        System.out.println(recipeNames.toString());
-        System.out.println(ingredients.toString());
 
         return new GroceryList(recipeNames, ingredients);
     }
@@ -70,9 +70,8 @@ public class CsvConverter implements Function<String, GroceryList> {
 
     private Ingredient convertToIngredient(final String value) {
         final String amount = value.substring(0, value.indexOf(' '));
-        final int number = Integer.valueOf(amount.replaceAll("[^0-9]",""));
-        final String unit = amount.replaceAll("[0-9]","");
-
+        final double number = Double.valueOf(amount.replaceFirst("^([0-9\\.]+).*","$1"));
+        final String unit = amount.replaceFirst("^([0-9\\.]+)","");
         final Amount ingredientAmount = Amounts.of(unit, number);
         final String ingredientName = value.substring(amount.length()).trim();
         return new Ingredient(ingredientName, ingredientAmount);

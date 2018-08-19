@@ -1,0 +1,14 @@
+<html>
+    <head><title th:text="${appName}"></title></head>
+    <body>
+        <h1>Grocery List</h1>
+        <h2>Recipes</h2>
+        <ul>
+            <li th:each="recipe : ${list.recipes}" th:text="${recipe}"></li>
+        </ul>
+        <h2>Ingredients</h2>
+        <ul>
+            <li th:each="ingredient: ${list.ingredients}" th:text="${ingredient}"></li>
+        </ul>
+    </body>
+</html>

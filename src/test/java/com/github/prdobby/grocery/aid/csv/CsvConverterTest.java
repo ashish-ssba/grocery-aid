@@ -58,6 +58,15 @@ public class CsvConverterTest {
                 "15.0 g cheddar", "2.0 tortilla", "9.0 oz beef", "1.0 tsp cilantro", "1.0 tbsp salsa");
     }
 
+    @Test
+    public void parseLineUnregularDecimals() throws Exception {
+        final String input = "Omelette, 0.5oz onion, .25tbsp butter, 1 egg";
+
+        final GroceryList result = converter.apply(input);
+        assertThat(result.getRecipes()).containsOnly("Omelette");
+        assertThat(ingredientsAsStrings(result)).containsOnly("1.0 egg", "0.25 tbsp butter", "0.5 oz onion");
+    }
+
     private List<String> ingredientsAsStrings(final GroceryList groceryList) {
         return groceryList.getIngredients().stream()
             .map(Object::toString)
