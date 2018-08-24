@@ -17,7 +17,7 @@ public class ExceptionMappingHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionMappingHandler.class);
 
-    @ExceptionHandler(NumberFormatException.class, IllegalArgumentException.class)
+    @ExceptionHandler({ NumberFormatException.class, IllegalArgumentException.class })
     public ModelAndView badRequest(final Exception e) {
         log.warn("Received bad user input", e);
 
