@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>grocery-aid</name>
-    <description>Transforms a list of ingredients for a recipe into a grocery list and sends it to the specified destination</description>
+	<description>Transforms a list of ingredients for a recipe into a grocery list and sends it to the specified destination</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -24,13 +24,14 @@
 		<java.version>1.8</java.version>
 
         <findbugs.version>3.0.2</findbugs.version>
+		<firebase.version>6.3.0</firebase.version>
 	</properties>
 
 	<dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -48,6 +49,11 @@
             <artifactId>jsr305</artifactId>
             <version>${findbugs.version}</version>
         </dependency>
+		<dependency>                                                                                                    
+			<groupId>com.google.firebase</groupId>                                                                      
+			<artifactId>firebase-admin</artifactId>                                                                     
+			<version>${firebase.version}</version>                                                                      
+		</dependency>    
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
