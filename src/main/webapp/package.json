@@ -4,13 +4,20 @@
   "description": "Application to help with creating grocery lists",
   "scripts": {
     "test": "test",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "webpack": "webpack --progress --color --watch --display-error-details"
   },
   "private": true,
   "author": "prdobby",
   "license": "MIT",
   "devDependencies": {
+    "css-loader": "^1.0.0",
+    "vue-loader": "^15.4.0",
+    "vue-template-compiler": "^2.5.17",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "vue": "^2.5.17"
   }
 }

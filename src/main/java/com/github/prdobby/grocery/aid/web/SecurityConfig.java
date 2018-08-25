@@ -56,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("**/favicon.ico").permitAll()
                 .antMatchers("/csv/**").permitAll()
+                .antMatchers("/").permitAll()
                 .antMatchers("/**").authenticated()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
