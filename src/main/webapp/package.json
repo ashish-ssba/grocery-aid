@@ -1,0 +1,16 @@
+{
+  "name": "grocery-aid",
+  "version": "0.0.1",
+  "description": "Application to help with creating grocery lists",
+  "scripts": {
+    "test": "test",
+    "build": "webpack -p"
+  },
+  "private": true,
+  "author": "prdobby",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0"
+  }
+}
