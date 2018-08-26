@@ -1,30 +1,30 @@
 <template>
   <div>
+    <div>
+      <Auth />
+    </div>
     <h2>CSV Upload</h2>
     <CsvUpload />
   </div>
 </template>
 
 <script>
-import CsvUpload from './components/upload/Csv.vue'
 import firebase from 'firebase/app';
 import auth from 'firebase/auth';
 import config from './firebase.config.js';
 
+import CsvUpload from './components/upload/Csv.vue'
+import Auth from './components/auth/AuthBox.vue'
+
 firebase.initializeApp(config);
-console.log("Firebase initialized with: " + JSON.stringify(config));
 
 export default {
     name: 'App',
     components: {
-        CsvUpload
+        CsvUpload, Auth 
     }
 }
 </script>
 
 <style scoped>
-p {
-    font-size: 2em;
-    text-align: center;
-}
 </style>
