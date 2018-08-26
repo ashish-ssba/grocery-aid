@@ -14,12 +14,21 @@
   </div>
   <div class="field is-grouped">
     <div class="control">
-      <button class="button is-link" v-on:click="signUp">Sign Up</button>
+      <input type="button" class="button is-primary" v-on:click="signUp" value="Sign Up">
     </div>
     <div class="control">
-      <button class="button is-text" v-on:click="cancel">Cancel</button>
+      <input type="button" class="button is-text" v-on:click="cancel" value="Cancel">
     </div>
   </div>
+  <article class="message is-danger" v-if="errorMessage.length > 0">
+    <div class="message-header">
+      <p>Error Creating Account</p>
+      <button class="delete" aria-label="delete" v-on:click="dismissError"></button>
+    </div>
+    <div class="message-body">
+      {{ errorMessage }}
+    </div>
+  </article>
 </form>
 </template>
 
@@ -31,25 +40,32 @@ export default {
     data: function() {
         return {
             email: '',
-            password: ''
+            password: '',
+            errorMessage: ''
         }
     },
     methods: {
         signUp: function() {
+            var self = this
             firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
-                alert("Oops. " + error.message);
-                if (error.code === 'auth/invalid-email') {
-                } else {
-                }
+                self.errorMessage = error.message
             });
         },
         cancel: function() {
             this.email = '';
             this.password = '';
+        },
+        dismissError: function() {
+            this.errorMessage = ''
         }
     }
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/elements/button.sass";
+@import "~bulma/sass/elements/form.sass";
+@import "~bulma/sass/components/message.sass";
+@import "~bulma/sass/elements/other.sass";
 </style>

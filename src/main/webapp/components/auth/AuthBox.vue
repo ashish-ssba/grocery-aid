@@ -33,5 +33,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/components/panel.sass";
 </style>

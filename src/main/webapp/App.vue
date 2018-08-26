@@ -26,5 +26,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@charset "utf-8";
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/base/_all.sass";
 </style>

@@ -3,23 +3,32 @@
   <div class="field">
     <label class="label">Email</label>
     <div class="control">
-      <input class="input" type="email" placeholder="Email" />
+      <input class="input" type="email" placeholder="Email" v-model="email" />
     </div>
   </div>
   <div class="field">
     <label class="label">Password</label>
     <div class="control">
-      <input class="input" type="password" placeholder="Password" />
+      <input class="input" type="password" placeholder="Password" v-model="password" />
     </div>
   </div>
   <div class="field is-grouped">
     <div class="control">
-      <button class="button is-link">Login</button>
+      <input type="button" class="button is-primary" v-on:click="login" value="Login">
     </div>
     <div class="control">
-      <button class="button is-text">Cancel</button>
+      <input type="button" class="button is-text" v-on:click="cancel" value="Cancel">
     </div>
   </div>
+  <article class="message is-danger" v-if="errorMessage.length > 0">
+    <div class="message-header">
+      <p>Error Logging In</p>
+      <button class="delete" aria-label="delete" v-on:click="dismissError"></button>
+    </div>
+    <div class="message-body">
+     {{ errorMessage }}
+    </div>
+  </article>
 </form>
 </template>
 
@@ -31,22 +40,32 @@ export default {
     data: function() {
         return {
             email: '',
-            password: ''
+            password: '',
+            errorMessage: ''
         }
     },
     methods: {
         login: function() {
+            var self = this
             firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
-                alert("Opps. " + error.message);
+                self.errorMessage = error.message
             });
         },
         cancel: function() {
             this.email = '';
             this.password = '';
+        },
+        dismissError: function() {
+            this.errorMessage = ''
         }
     }
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/elements/button.sass";
+@import "~bulma/sass/elements/form.sass";
+@import "~bulma/sass/components/message.sass";
+@import "~bulma/sass/elements/other.sass";
 </style>
