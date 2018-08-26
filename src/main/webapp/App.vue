@@ -7,6 +7,12 @@
 
 <script>
 import CsvUpload from './components/upload/Csv.vue'
+import firebase from 'firebase/app';
+import auth from 'firebase/auth';
+import config from './firebase.config.js';
+
+firebase.initializeApp(config);
+console.log("Firebase initialized with: " + JSON.stringify(config));
 
 export default {
     name: 'App',
