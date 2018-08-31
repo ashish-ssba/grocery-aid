@@ -32,10 +32,11 @@
 </form>
 </template>
 
-<script>
-import firebase from 'firebase/app';
+<script lang="ts">
+import Vue from 'vue';
+import * as firebase from 'firebase/app';
 
-export default {
+export default Vue.extend({
     name: 'signup',
     data: function() {
         return {
@@ -47,7 +48,7 @@ export default {
     methods: {
         signUp: function() {
             var self = this
-            firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
+            firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error: firebase.FirebaseError) {
                 self.errorMessage = error.message
             });
         },
@@ -59,7 +60,7 @@ export default {
             this.errorMessage = ''
         }
     }
-}
+});
 </script>
 
 <style lang="scss">

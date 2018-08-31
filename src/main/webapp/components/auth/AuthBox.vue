@@ -11,11 +11,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import SignUp from './SignUp.vue'
 import Login from './Login.vue'
 
-export default {
+export default Vue.extend({
     name: 'authBox',
     data: function() {
         return {
@@ -23,14 +24,14 @@ export default {
         }
     },
     methods: {
-        toggleIsLogin: function(newValue) {
+        toggleIsLogin: function(newValue: boolean) {
             this.isLogin = newValue
         }
     },
     components: {
         SignUp, Login
     }
-}
+});
 </script>
 
 <style lang="scss">

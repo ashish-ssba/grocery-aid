@@ -2,7 +2,7 @@
   <form method="POST" action="/csv" enctype="multipart/form-data">
     <div class="field file has-name">
       <label class="file-label">
-        <input class="file-input" type="file" name="file" v-on:change="updateFilename"/>
+        <input class="file-input" type="file" name="file" v-on:change="updateFilename($event.target.files)"/>
         <span class="file-cta">
           <span class="file-label">
             Select a CSV file...
@@ -19,8 +19,10 @@
   </form>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
     name: 'csvUpload',
     data: function() {
         return {
@@ -28,8 +30,7 @@ export default {
         }
     },
     methods: {
-        updateFilename: function(event) {
-            var files = event.target.files;
+        updateFilename: function(files: FileList) {
             if (files.length > 0) {
                 this.filename = files[0].name;
             } else {
@@ -37,7 +38,7 @@ export default {
             }
         }
     }
-}
+});
 </script>
 
 <style lang="scss">

@@ -5,16 +5,23 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const devOptions = process.env.NODE_ENV === 'development' ? 'inline-source-map' : false;
 
 module.exports = {
-    entry: './main.js',
+    entry: './main.ts',
     devtool: devOptions,
     resolve: {
         alias: {
             components: path.resolve(__dirname, 'components')
         },
-        extensions: ['.vue', '.js']
+        extensions: ['.vue', '.js', '.ts']
     },
     module: {
         rules: [{
+            test: /\.ts$/,
+            loader: 'ts-loader',
+            exclude: /node_modules/,
+            options: {
+                appendTsSuffixTo: [/\.vue$/]
+            }
+        }, {
             test: /\.vue$/,
             loader: 'vue-loader'
         }, {
