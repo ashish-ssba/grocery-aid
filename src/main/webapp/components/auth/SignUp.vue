@@ -20,21 +20,19 @@
       <input type="button" class="button is-text" v-on:click="cancel" value="Cancel">
     </div>
   </div>
-  <article class="message is-danger" v-if="errorMessage.length > 0">
-    <div class="message-header">
-      <p>Error Creating Account</p>
-      <button class="delete" aria-label="delete" v-on:click="dismissError"></button>
-    </div>
-    <div class="message-body">
-      {{ errorMessage }}
-    </div>
-  </article>
+  <error-message 
+    v-if="errorMessage.length > 0" 
+    header="Error Creating Account" 
+    v-bind:message="errorMessage" 
+    v-on:close="errorMessage = ''"/>
 </form>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import * as firebase from 'firebase/app';
+
+import ErrorMessage from '../base/BaseErrorMessage.vue'
 
 export default Vue.extend({
     name: 'signup',
@@ -55,10 +53,10 @@ export default Vue.extend({
         cancel: function() {
             this.email = '';
             this.password = '';
-        },
-        dismissError: function() {
-            this.errorMessage = ''
         }
+    },
+    components: {
+      ErrorMessage
     }
 });
 </script>
@@ -67,6 +65,4 @@ export default Vue.extend({
 @import "~bulma/sass/utilities/_all.sass";
 @import "~bulma/sass/elements/button.sass";
 @import "~bulma/sass/elements/form.sass";
-@import "~bulma/sass/components/message.sass";
-@import "~bulma/sass/elements/other.sass";
 </style>
