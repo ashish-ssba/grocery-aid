@@ -2,8 +2,11 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+const devOptions = process.env.NODE_ENV === 'development' ? 'inline-source-map' : false;
+
 module.exports = {
     entry: './main.js',
+    devtool: devOptions,
     resolve: {
         alias: {
             components: path.resolve(__dirname, 'components')
