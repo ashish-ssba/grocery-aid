@@ -46,13 +46,21 @@ export default Vue.extend({
     methods: {
         signUp: function() {
             var self = this
-            firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error: firebase.FirebaseError) {
-                self.errorMessage = error.message
-            });
+            firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
+              (credential) => {
+                let user = credential.user ? credential.user.displayName || credential.user.email : "Unknown"
+                this.$emit('login', user)
+              }
+            ).catch(
+              (error) => {
+                this.errorMessage = error.message
+              }
+            )
         },
         cancel: function() {
             this.email = '';
             this.password = '';
+            this.$emit('cancel')
         }
     },
     components: {

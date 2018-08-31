@@ -1,10 +1,8 @@
 <template>
   <div>
-    <div>
-      <Auth />
-    </div>
+    <the-menu />
     <h2>CSV Upload</h2>
-    <CsvUpload />
+    <csv-upload />
   </div>
 </template>
 
@@ -15,14 +13,14 @@ import 'firebase/auth';
 import * as config from './firebase.config.js';
 
 import CsvUpload from './components/upload/Csv.vue'
-import Auth from './components/auth/AuthBox.vue'
+import TheMenu from './components/app/TheMenu.vue'
 
 firebase.initializeApp(config);
 
 export default Vue.extend({
     name: 'App',
     components: {
-        CsvUpload, Auth 
+        CsvUpload, TheMenu 
     }
 });
 </script>
