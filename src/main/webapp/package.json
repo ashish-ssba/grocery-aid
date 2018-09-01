@@ -5,7 +5,7 @@
   "scripts": {
     "test": "test",
     "build": "webpack -p",
-    "webpack": "webpack --progress --color --watch --display-error-details"
+    "webpack": "webpack --progress --color --watch --display-error-details --mode=development"
   },
   "private": true,
   "author": "prdobby",
