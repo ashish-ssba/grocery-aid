@@ -56,6 +56,6 @@ public class GroceryAidUser {
 
         GroceryAidUser otherUser = (GroceryAidUser) other;
 
-        return otherUser.getId().equals(this.name);
+        return otherUser.getId().equals(this.id);
     }
 }
