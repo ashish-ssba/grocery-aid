@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 public class FirebaseAuthenticationTokenFilter extends AbstractAuthenticationProcessingFilter {
     private static final Logger log = LoggerFactory.getLogger(FirebaseAuthenticationTokenFilter.class);
@@ -20,7 +22,7 @@ public class FirebaseAuthenticationTokenFilter extends AbstractAuthenticationPro
     private final static String TOKEN_HEADER = "X-Firebase-Auth";
 
     public FirebaseAuthenticationTokenFilter() {
-        super("/recipes");
+        super(new OrRequestMatcher(new AntPathRequestMatcher("/recipes"), new AntPathRequestMatcher("/users")));
     }
 
     @Override
@@ -33,7 +35,7 @@ public class FirebaseAuthenticationTokenFilter extends AbstractAuthenticationPro
             throw new PreAuthenticatedCredentialsNotFoundException("No auth token provided");
         }
 
-        log.debug("Found authentication token, attempting authentication using Firebase");
+        log.debug("Found authentication token, attempting authentication using Firebase with token");
         return getAuthenticationManager().authenticate(new FirebaseAuthenticationToken(authToken));
     }
 

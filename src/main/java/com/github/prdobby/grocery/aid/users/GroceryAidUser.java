@@ -6,37 +6,21 @@ public class GroceryAidUser {
     @Nonnull
     private final String id;
 
-    @Nonnull
-    private String name;
-
-    public GroceryAidUser(final String id, final String name) {
+    public GroceryAidUser(final String id) {
         if (id == null) {
             throw new NullPointerException("Id is not allowed to be null");
         }
 
         this.id = id;
-        this.setName(name);
     }
 
     public String getId() {
         return this.id;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(final String newName) {
-        if (newName == null) {
-            throw new NullPointerException("Name is not allowed to be null");
-        }
-
-        this.name = newName;
-    }
-
     @Override
     public String toString() {
-        return this.name + " (" + this.id + ")";
+        return this.id;
     }
 
     @Override

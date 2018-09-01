@@ -31,7 +31,7 @@ public class FirebaseAuthenticationToken implements Authentication {
 
     @Override
     public String getName() {
-        return this.token;
+        return this.userRecord.getName();
     }
 
     @Override

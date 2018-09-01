@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, String> {
-    Optional<User> findFirstByAuthId();
+    Optional<User> findFirstByAuthId(final String authId);
 }
