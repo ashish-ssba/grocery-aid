@@ -1,4 +1,4 @@
-package com.github.prdobby.grocery.aid.models;
+package com.github.prdobby.grocery.aid.recipes;
 
 import java.util.HashMap;
 import java.util.Map;

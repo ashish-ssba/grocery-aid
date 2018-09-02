@@ -2,6 +2,8 @@ package com.github.prdobby.grocery.aid.models;
 
 import java.util.List;
 
+import com.github.prdobby.grocery.aid.recipes.Ingredient;
+
 public class GroceryList {
     private List<String> recipes;
 

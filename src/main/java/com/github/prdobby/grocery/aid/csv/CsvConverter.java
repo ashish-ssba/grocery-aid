@@ -3,16 +3,15 @@ package com.github.prdobby.grocery.aid.csv;
 import java.util.stream.Collectors;
 import java.util.function.Function;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.stereotype.Component;
 
-import com.github.prdobby.grocery.aid.models.Amount;
-import com.github.prdobby.grocery.aid.models.Amounts;
 import com.github.prdobby.grocery.aid.models.GroceryList;
-import com.github.prdobby.grocery.aid.models.Ingredient;
+import com.github.prdobby.grocery.aid.recipes.GroceryAidRecipe;
+import com.github.prdobby.grocery.aid.recipes.Ingredient;
+import com.github.prdobby.grocery.aid.recipes.Unit;
 
 @Component
 public class CsvConverter implements Function<String, GroceryList> {
@@ -20,10 +19,18 @@ public class CsvConverter implements Function<String, GroceryList> {
 
     @Override
     public GroceryList apply(final String input) {
-        List<String> lines = convertInputToLines(input);
-        
-        List<String> recipeNames = getRecipeNames(lines);
-        List<Ingredient> ingredients = getIngredients(lines);
+        List<GroceryAidRecipe> recipes = convertInputToLines(input).stream()
+            .map(this::convertToRecipe)
+            .collect(Collectors.toList());
+
+        List<String> recipeNames = recipes.stream()
+            .map(GroceryAidRecipe::getName)
+            .collect(Collectors.toList());
+
+        List<Ingredient> ingredients = recipes.stream()
+            .map(GroceryAidRecipe::getIngredients)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
 
         return new GroceryList(recipeNames, ingredients);
     }
@@ -32,62 +39,67 @@ public class CsvConverter implements Function<String, GroceryList> {
         return Arrays.asList(input.split("\n"));
     }
 
-    private List<String> getRecipeNames(final List<String> lines) {
-        return lines.stream()
-            .map(this::getRecipeNameFromLine)
-            .collect(Collectors.toList());
-    }
+    private GroceryAidRecipe convertToRecipe(final String line) {
+        List<String> values = splitLineIntoValues(line);
+        final GroceryAidRecipe recipe = new GroceryAidRecipe(values.remove(0));
 
-    private String getRecipeNameFromLine(final String line) {
-        // The recipe name should be the first column in each line
-        return line.substring(0, line.indexOf(SEPARATOR));
-    }
-
-    private List<Ingredient> getIngredients(final List<String> lines) {
-        Map<String, List<Ingredient>> ingredients = lines.stream()
-            .map(this::splitLineIntoValues)
-            .map(this::removeRecipeNamesFromValues)
-            .flatMap(List::stream)
+        values.stream()
             .map(String::trim)
             .filter(value -> !value.isEmpty())
             .map(this::convertToIngredient)
-            .collect(Collectors.groupingBy(Ingredient::getName));
+            .forEach(recipe::addIngredient);
 
-
-        return ingredients.values().stream()
-            .map(this::combineAmounts)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+        return recipe;
     }
 
     private List<String> splitLineIntoValues(final String line) {
-        return Arrays.asList(line.split(SEPARATOR));
-    }
-
-    private List<String> removeRecipeNamesFromValues(final List<String> values) {
-        return values.subList(1, values.size());
+        final List<String> values = new ArrayList<>();
+        values.addAll(Arrays.asList(line.split(SEPARATOR)));
+        return values;
     }
 
     private Ingredient convertToIngredient(final String value) {
-        final String amount = value.substring(0, value.indexOf(' '));
-        final double number = Double.valueOf(amount.replaceFirst("^([0-9\\.]+).*","$1"));
-        final String unit = amount.replaceFirst("^([0-9\\.]+)","");
-        final Amount ingredientAmount = Amounts.of(unit, number);
-        final String ingredientName = value.substring(amount.length()).trim();
-        return new Ingredient(ingredientName, ingredientAmount);
+        String strAmount = value.replaceFirst("^([0-9\\.]+).*","$1");
+        Number amount = parseAmount(strAmount);
+        String valueWithoutAmount = value.replaceFirst(strAmount, "").trim();
+
+        String strUnit = parseStringUnit(valueWithoutAmount);
+        Unit unit = Unit.parse(strUnit);
+        
+        String ingredientName = valueWithoutAmount.replaceFirst(strUnit, "").trim();
+
+        return new Ingredient(ingredientName, unit, amount);
     }
 
-    private Ingredient combineAmounts(final List<Ingredient> ingredients) {
-        if (ingredients.isEmpty()) {
-            return null;
+    private Number parseAmount(final String numericStr) {
+        if (numericStr.contains(".")) {
+            return Double.valueOf(numericStr);
+        } else {
+            return Integer.valueOf(numericStr);
+        }
+    }
+
+    private String parseStringUnit(final String value) {
+        int spaceIndex = value.indexOf(" ");
+        if (spaceIndex == -1) {
+            return "";
+        }
+        String unitStr = value.substring(0, spaceIndex).trim();
+        Unit unit = Unit.parse(unitStr);
+
+        if (Unit.NONE.equals(unit)) {
+            spaceIndex = value.indexOf(" ", spaceIndex + 1);
+            if (spaceIndex == -1) {
+                return "";
+            }
+            unitStr = value.substring(0, spaceIndex).trim();
+            unit = Unit.parse(unitStr);
         }
 
-        final List<Amount> amounts = ingredients.stream()
-            .map(Ingredient::getAmount)
-            .collect(Collectors.toList());
-
-        final Amount combinedAmount = Amounts.combine(amounts);
-        final String name = ingredients.get(0).getName();
-        return new Ingredient(name, combinedAmount);
+        if (Unit.NONE.equals(unit)) {
+            return "";
+        } else {
+            return unitStr;
+        }
     }
 }

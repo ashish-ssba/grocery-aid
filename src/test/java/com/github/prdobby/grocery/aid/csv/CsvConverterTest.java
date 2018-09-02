@@ -13,8 +13,7 @@ import com.github.prdobby.grocery.aid.models.GroceryList;
 public class CsvConverterTest {
 
     private static final String OMELETTE = "Omelette, 3 egg, 10oz diced onion, 1tbsp butter, 5g cheddar";
-    private static final String TACO = "Taco, 1 tortilla, 4oz beef, 1tsp cilantro";
-    private static final String BURRITO = "Burrito, 1 tortilla, 10g cheddar, 5oz beef, 1tbsp salsa";
+    private static final String BURRITO = "Burrito, 1 tortilla, 5.75g cheddar, 5 oz beef, 1 fl oz salsa";
 
     private CsvConverter converter;
 
@@ -29,42 +28,94 @@ public class CsvConverterTest {
     }
 
     @Test
-    public void parsesALineCorrectly() throws Exception {
-        final String input = OMELETTE;
+    public void parsesIngredient_NoUnit() throws Exception {
+        final String input = "Fried Egg, 1 egg";
 
         final GroceryList result = converter.apply(input);
 
-        assertThat(result.getRecipes()).containsOnly("Omelette");
-        assertThat(ingredientsAsStrings(result)).containsOnly("3.0 egg", "10.0 oz diced onion", "1.0 tbsp butter", "5.0 g cheddar");
+        assertThat(result.getRecipes()).containsOnly("Fried Egg");
+        assertThat(ingredientsAsStrings(result)).containsOnly("1 egg");
     }
 
     @Test
-    public void parsesLinesWithDifferentIngredients() throws Exception {
-        final String input = String.join("\n", OMELETTE, TACO);
+    public void parsesIngredient_NoSpaceBetweenAmountAndUnit() throws Exception {
+        final String input = "Milk, 1pt milk";
 
         final GroceryList result = converter.apply(input);
-        assertThat(result.getRecipes()).containsOnly("Omelette", "Taco");
-        assertThat(ingredientsAsStrings(result)).containsOnly("3.0 egg", "10.0 oz diced onion", "1.0 tbsp butter", 
-                "5.0 g cheddar", "1.0 tortilla", "4.0 oz beef", "1.0 tsp cilantro");
+
+        assertThat(result.getRecipes()).containsOnly("Milk");
+        assertThat(ingredientsAsStrings(result)).containsOnly("1 pt milk");
     }
 
     @Test
-    public void parsesLinesWithCombiningIngredients() throws Exception {
-        final String input = String.join("\n", OMELETTE, TACO, BURRITO);
+    public void parsesIngredient_SpaceBetweenAmountAndUnit() throws Exception {
+        final String input = "Milk, 1 pt milk";
 
         final GroceryList result = converter.apply(input);
-        assertThat(result.getRecipes()).containsOnly("Omelette", "Taco", "Burrito");
-        assertThat(ingredientsAsStrings(result)).containsOnly("3.0 egg", "10.0 oz diced onion", "1.0 tbsp butter", 
-                "15.0 g cheddar", "2.0 tortilla", "9.0 oz beef", "1.0 tsp cilantro", "1.0 tbsp salsa");
+
+        assertThat(result.getRecipes()).containsOnly("Milk");
+        assertThat(ingredientsAsStrings(result)).containsOnly("1 pt milk");
     }
 
     @Test
-    public void parseLineUnregularDecimals() throws Exception {
-        final String input = "Omelette, 0.5oz onion, .25tbsp butter, 1 egg";
+    public void parsesIngredient_SpaceInUnit_NoSpaceBetweenAmountAndUnit() throws Exception {
+        final String input = "Milk, 1fl oz milk";
 
         final GroceryList result = converter.apply(input);
-        assertThat(result.getRecipes()).containsOnly("Omelette");
-        assertThat(ingredientsAsStrings(result)).containsOnly("1.0 egg", "0.25 tbsp butter", "0.5 oz onion");
+
+        assertThat(result.getRecipes()).containsOnly("Milk");
+        assertThat(ingredientsAsStrings(result)).containsOnly("1 fl oz milk");
+    }
+
+    @Test
+    public void parsesIngredient_SpaceInUnit_SpaceBetweenAmountAndUnit() throws Exception {
+        final String input = "Milk, 1 fl oz milk";
+
+        final GroceryList result = converter.apply(input);
+
+        assertThat(result.getRecipes()).containsOnly("Milk");
+        assertThat(ingredientsAsStrings(result)).containsOnly("1 fl oz milk");
+    }
+
+    @Test
+    public void parsesIngredient_NonStandardUnitName() throws Exception {
+        final String input = "Milk, 1 litre milk";
+
+        final GroceryList result = converter.apply(input);
+
+        assertThat(result.getRecipes()).containsOnly("Milk");
+        assertThat(ingredientsAsStrings(result)).containsOnly("1 l milk");
+    }
+
+    @Test
+    public void parsesIngredient_DecimalInIngredient() throws Exception {
+        final String input = "Milk, 1.5 pt milk";
+
+        final GroceryList result = converter.apply(input);
+
+        assertThat(result.getRecipes()).containsOnly("Milk");
+        assertThat(ingredientsAsStrings(result)).containsOnly("1.5 pt milk");
+    }
+
+    @Test
+    public void parsesIngredient_DecimalStartsIngredient() throws Exception {
+        final String input = "Milk, .5 pt milk";
+
+        final GroceryList result = converter.apply(input);
+
+        assertThat(result.getRecipes()).containsOnly("Milk");
+        assertThat(ingredientsAsStrings(result)).containsOnly("0.5 pt milk");
+    }
+
+    @Test
+    public void parsesMultipleLines() throws Exception {
+        final String input = String.join("\n", OMELETTE, BURRITO);
+
+        final GroceryList result = converter.apply(input);
+
+        assertThat(result.getRecipes()).containsOnly("Omelette", "Burrito");
+        assertThat(ingredientsAsStrings(result)).containsOnly("3 egg", "10 oz diced onion", "1 tbsp butter", "5 g cheddar",
+            "1 tortilla", "5.75 g cheddar", "5 oz beef", "1 fl oz salsa");
     }
 
     private List<String> ingredientsAsStrings(final GroceryList groceryList) {
