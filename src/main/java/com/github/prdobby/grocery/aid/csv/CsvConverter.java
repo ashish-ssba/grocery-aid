@@ -24,7 +24,7 @@ public class CsvConverter implements Function<String, GroceryList> {
             .collect(Collectors.toList());
 
         List<String> recipeNames = recipes.stream()
-            .map(GroceryAidRecipe::getName)
+            .map(GroceryAidRecipe::getRecipeName)
             .collect(Collectors.toList());
 
         List<Ingredient> ingredients = recipes.stream()
