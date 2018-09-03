@@ -8,7 +8,7 @@
     "webpack": "webpack --progress --color --watch --display-error-details --mode=development"
   },
   "private": true,
-  "author": "prdobby",
+  "author": "prfisher",
   "license": "MIT",
   "devDependencies": {
     "bulma": "^0.7.1",
