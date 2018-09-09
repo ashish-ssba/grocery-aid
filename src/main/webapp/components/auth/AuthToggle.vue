@@ -25,16 +25,13 @@
 import Vue from 'vue'
 import SignUp from './SignUp.vue'
 import Login from './Login.vue'
-import * as firebase from 'firebase/app'
 
 export default Vue.extend({
     name: 'AuthToggle',
     data: function() {
         return {
-            isAuthenticated: false,
             isDropdownActive: false,
-            isLogin: true,
-            username: ''
+            isLogin: true
         }
     },
     computed: {
@@ -43,6 +40,12 @@ export default Vue.extend({
                 'has-dropdown': !this.isAuthenticated,
                 'is-active': !this.isAuthenticated && this.isDropdownActive
             }
+        },
+        username: function() {
+            return this.$store.state.user.name
+        },
+        isAuthenticated: function() {
+            return this.$store.state.user.name && this.$store.state.user.name.length > 0
         }
     },
     methods: {
@@ -52,13 +55,8 @@ export default Vue.extend({
             this.username = username
         },
         logout: function() {
-            firebase.auth().signOut().then(
-                () => {
-                    this.isDropdownActive = false
-                    this.isAuthenticated = false
-                    this.username = ''
-                }
-            )
+            this.$store.dispatch('user/logout')
+            this.isDropdownActive = false
         }
     },
     components: {

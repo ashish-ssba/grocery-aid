@@ -24,13 +24,12 @@
     v-if="errorMessage.length > 0" 
     header="Error Logging In" 
     v-bind:message="errorMessage" 
-    v-on:close="errorMessage = ''"/>
+    v-on:close="clearError" />
 </form>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import * as firebase from 'firebase/app'
 
 import ErrorMessage from '../base/BaseErrorMessage.vue'
 
@@ -39,27 +38,25 @@ export default Vue.extend({
     data: function() {
         return {
             email: '',
-            password: '',
-            errorMessage: ''
+            password: ''
         }
+    },
+    computed: {
+      errorMessage: function() {
+        return this.$store.state.errorMessage
+      }
     },
     methods: {
         login: function() {
-            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
-              (credential) => {
-                let user = credential.user ? credential.user.displayName || credential.user.email : "Unknown"
-                this.$emit('login', user)
-              }
-            ).catch(
-              (error) => {
-                this.errorMessage = error.message
-              }
-            )
+          this.$store.dispatch('user/login', { email: this.email, password: this.password })
         },
         cancel: function() {
-            this.email = '';
-            this.password = '';
-            this.$emit('cancel')
+          this.email = '';
+          this.password = '';
+          this.$emit('cancel')
+        },
+        clearError: function() {
+          this.$store.dispatch('clearError')
         }
     },
     components: {
