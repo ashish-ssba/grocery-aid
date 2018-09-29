@@ -3,6 +3,7 @@
     <the-menu />
     <h2>CSV Upload</h2>
     <csv-upload />
+    <recipe-form />
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import store from './store'
 
 import CsvUpload from './components/upload/Csv.vue'
 import TheMenu from './components/app/TheMenu.vue'
+import RecipeForm from './components/recipe/RecipeForm.vue'
 
 firebase.initializeApp(config);
 
@@ -24,7 +26,7 @@ export default Vue.extend({
     name: 'App',
     store,
     components: {
-        CsvUpload, TheMenu 
+        CsvUpload, TheMenu, RecipeForm
     },
     created: function() {
       firebase.auth().onAuthStateChanged((user) => {
